@@ -57,12 +57,12 @@ func determineSafe(values []int, dampener bool) bool {
         prevVal := values[i]
         if !compare(prevVal, curVal) || abs(prevVal - curVal) > 3 {
             if dampener {
-                for i := range(values) {
+                for j := 0; j <= i + 1; j++ {
                     var valCopy = make([]int, len(values))
 
                     copy(valCopy, values)
 
-                    valCopy = slices.Delete(valCopy, i, i + 1)
+                    valCopy = slices.Delete(valCopy, j, j + 1)
                     if determineSafe(valCopy, false) {
                         return true
                     }
