@@ -34,6 +34,7 @@ func main() {
     left_map := make(map[int]int)
 
     for i, element := range(data_list) {
+        fmt.Printf("line: %q\n", element)
         split_data := strings.Split(element, "   ")
 
         // fmt.Printf("%q\n", split_data)
