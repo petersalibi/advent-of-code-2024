@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"sync"
 
 	"advent-of-code/utils"
 )
@@ -89,30 +90,65 @@ func readXMas(data []string, x, y int) bool {
 	return false
 }
 
-func findMatches(input []string, part1 bool) int {
+func findMatches(input []string, start, end int, part1 bool, ch chan int, wg *sync.WaitGroup) {
+    defer wg.Done()
 	result := 0
-	for y, line := range input {
+    for y, line := range input[start:end] {
 		for x, letter := range line {
 			if letter == 'X' && part1 {
 				for _, direction := range directions {
-					if readDirection(input, x, y, direction) {
+					if readDirection(input, x, y + start, direction) {
 						result += 1
 					}
 				}
 			}
             if letter == 'A' && !part1 {
-                if readXMas(input, x, y) {
+                if readXMas(input, x, y + start) {
                     result += 1
                 }
             }
 		}
 	}
-	return result
+	ch <- result
+}
+
+func dispatchFindMatches(input []string, part1 bool, numThreads int) int {
+    ch := make(chan int)
+    var wg sync.WaitGroup
+
+    chunkSize := len(input) / numThreads
+
+    for i := 0; i < numThreads; i++ {
+        start := i * chunkSize
+        var end int
+
+        if i + 1 == numThreads {
+            end = len(input)
+        } else {
+            end = (i + 1) * chunkSize
+        }
+
+        wg.Add(1)
+        go findMatches(input, start, end, part1, ch, &wg)
+    }
+
+    go func() {
+        wg.Wait()
+        close(ch)
+    }()
+
+    result := 0
+    for val := range(ch) {
+        result += val
+    }
+
+    return result
 }
 
 func main() {
 	data := utils.GetDataFromFile()
 	dataLines := strings.Split(data, "\n")
+    numThreads := 8
 
-    fmt.Printf("Part 1: %d, Part 2: %d\n", findMatches(dataLines, true), findMatches(dataLines, false))
+    fmt.Printf("Part 1: %d, Part 2: %d\n", dispatchFindMatches(dataLines, true, numThreads), dispatchFindMatches(dataLines, false, numThreads))
 }
