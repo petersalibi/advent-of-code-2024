@@ -46,7 +46,31 @@ func walkTrail(trail []string, curNum int, location utils.Pair) []utils.Pair {
     return trailHeads
 }
 
-func walkOverAll(trail []string) int {
+func walkTrailPart2(trail []string, curNum int, location utils.Pair) int {
+    if curNum == 9 {
+        return 1
+    }
+
+    trailHeads := 0
+    yLimit := len(trail)
+    xLimit := len(trail[0])
+
+    for _, direction := range directions {
+        newLocation := utils.AddPair(location, direction)
+        if !utils.InArrayBounds(xLimit, yLimit, newLocation) {
+            continue
+        }
+        nextTopology, _ := strconv.Atoi(string(trail[newLocation.Y][newLocation.X]))
+
+        if nextTopology == curNum + 1 {
+            trailHeads += walkTrailPart2(trail, nextTopology, newLocation)
+        }
+    }
+
+    return trailHeads
+}
+
+func walkOverAll(trail []string, part1 bool) int {
     allTrailHeads := 0
     for y, line := range trail {
         for x, num := range line {
@@ -55,7 +79,11 @@ func walkOverAll(trail []string) int {
             }
             height, _ := strconv.Atoi(string(num))
 
-            allTrailHeads += len(walkTrail(trail, height, utils.Pair{X: x, Y: y}))
+            if part1 {
+                allTrailHeads += len(walkTrail(trail, height, utils.Pair{X: x, Y: y}))
+            } else {
+                allTrailHeads += walkTrailPart2(trail, height, utils.Pair{X: x, Y: y})
+            }
         }
     }
     return allTrailHeads
@@ -65,7 +93,9 @@ func main() {
 	data := utils.GetDataFromFile()
 	splitData := strings.Split(data, "\n")
 
-    heads := walkOverAll(splitData)
+    headsPart1 := walkOverAll(splitData, true)
+    headsPart2 := walkOverAll(splitData, false)
 
-    fmt.Println("Part 1:", heads)
+    fmt.Println("Part 1:", headsPart1)
+    fmt.Println("Part 2:", headsPart2)
 }
