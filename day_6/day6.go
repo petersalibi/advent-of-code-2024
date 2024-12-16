@@ -119,7 +119,7 @@ func walkMap(guardMap []string, patrolGuard guard) int {
 	return result
 }
 
-func replaceStringAtIndex(str string, letter rune, index int) string {
+func replaceStringAtIndex(str []string, letter rune, index Pair) string {
 	newStr := []rune(str)
 	newStr[index] = letter
 	return string(newStr)
