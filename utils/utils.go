@@ -81,6 +81,15 @@ func ReplaceStringAtIndex(str []string, letter rune, index Pair) string {
 	return string(newStr)
 }
 
+func ByteArrayToString(b [][]byte) string {
+	newStr := make([]string, len(b))
+	for i, line := range b {
+		newStr[i] = string(line)
+	}
+
+    return strings.Join(newStr, "\n")
+}
+
 func GetDataFromFile() string {
     if (len(os.Args) != 2) {
         fmt.Fprintf(os.Stderr, "Usage: ./program file")
