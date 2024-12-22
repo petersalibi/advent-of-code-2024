@@ -19,6 +19,10 @@ func AddPair(p1, p2 Pair) Pair {
     return Pair{X: p1.X + p2.X, Y: p1.Y + p2.Y}
 }
 
+func SubPair(p1, p2 Pair) Pair {
+    return Pair{X: p1.X - p2.X, Y: p1.Y - p2.Y}
+}
+
 func Equal(p1, p2 Pair) bool {
     return p1.X == p2.X && p1.Y == p2.Y
 }
@@ -37,6 +41,10 @@ func InArrayBounds(xLimit, yLimit int, point Pair) bool {
 
 func IndexString(input []string, p Pair) byte {
     return input[p.Y][p.X]
+}
+
+func IndexArray[s [][]E, E any](arr s, p Pair) E {
+    return arr[p.Y][p.X]
 }
 
 func ContainsPair(p1 Pair) func(Pair) bool {
