@@ -12,6 +12,11 @@ type Pair struct {
     Y int
 }
 
+var UP = Pair{X: 0, Y: -1}
+var RIGHT = Pair{X: 1, Y: 0}
+var LEFT = Pair{X: -1, Y: 0}
+var DOWN = Pair{X: 0, Y: 1}
+
 func NewPair(x, y int) Pair {
     return Pair{X: x, Y: y}
 }
