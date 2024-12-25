@@ -1,9 +1,10 @@
 package utils
 
 import (
-    "os"
-    "fmt"
-    "strings"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
 )
 
 type Pair struct {
@@ -37,6 +38,10 @@ func InArrayBounds(xLimit, yLimit int, point Pair) bool {
     }
 
     return true
+}
+
+func (p *Pair) HashKey() string {
+    return strconv.Itoa(p.X) + "," + strconv.Itoa(p.Y)
 }
 
 func IndexString(input []string, p Pair) byte {
